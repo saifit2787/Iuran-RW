@@ -385,7 +385,7 @@
     </div>
 
     <script>
-        var API_URL = localStorage.getItem('iuranrt_api_url') || '';
+        var API_URL = localStorage.getItem('iuranrw_api_url') || '';
         var currentData = null;
         var sheetsInfo = [];
         var wargaData = [];
@@ -414,7 +414,7 @@
             var url = document.getElementById('apiUrlInput').value.trim();
             if (!url || !url.startsWith('https://script.google.com/')) { showToast('URL tidak valid', 'error'); return; }
             API_URL = url;
-            localStorage.setItem('iuranrt_api_url', url);
+            localStorage.setItem('iuranrw_api_url', url);
             document.getElementById('setupBanner').style.display = 'none';
             showToast('URL berhasil disimpan!', 'success');
             loadSheets();
