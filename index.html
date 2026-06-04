@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembukuan Iuran RT 08 RW 13 - LPR Pilang Sidodadi</title>
+    <title>Pembukuan Kas RW 13 - LPR Pilang Sidodadi</title>
     <style>
         :root {
             --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #dbeafe;
@@ -197,7 +197,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Pembukuan Iuran RT 08 RW 13</h1>
+        <h1>Pembukuan Kas RW 13</h1>
         <p>LPR Pilang - Sidodadi <span id="versionInfo" style="font-size:0.75rem; opacity:0.8; margin-left:10px;"></span></p>
         <div id="authStatus" style="margin-top:0.75rem; font-size:0.9rem; opacity:0.9; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;"></div>
     </div>
@@ -266,7 +266,7 @@
         <div id="viewLoading"><div class="loading"><div class="spinner"></div><p>Memuat data...</p></div></div>
     </div>
 
-    <div class="footer">Sistem Pembukuan Iuran RT 08 RW 13 LPR Pilang - Sidodadi</div>
+    <div class="footer">Sistem Pembukuan Kas RW 13 LPR Pilang - Sidodadi</div>
 
     <!-- MODAL: TAMBAH/EDIT TRANSAKSI -->
     <div class="modal-overlay" id="transactionModal">
@@ -277,7 +277,7 @@
                 <div class="form-group"><label>Tanggal</label><input type="date" id="formTanggal" /></div>
                 <div class="form-row">
                     <div class="form-group"><label>Nama</label><input type="text" id="formNama" placeholder="Nama warga" list="wargaList" /><datalist id="wargaList"></datalist></div>
-                    <div class="form-group"><label>No. RT</label><input type="text" id="formNoRT" placeholder="Contoh: K1, H4" /></div>
+                    <div class="form-group"><label>No. RT</label><input type="text" id="formNoRT" placeholder="Contoh: 1, 5, 8" /></div>
                 </div>
                 <div class="form-group"><label>Keterangan Transaksi</label><input type="text" id="formTransaksi" placeholder="Contoh: Iuran RT Mar 26" /></div>
                 <div class="form-row">
@@ -374,7 +374,7 @@
         <div class="modal">
             <div class="modal-header"><h3>Cek Iuran Per RT</h3><button class="modal-close" onclick="closeRTIuranModal()">&times;</button></div>
             <div class="modal-body">
-                <div class="form-group"><label>No RT</label><input type="text" id="RTIuranInput" placeholder="Contoh: K1, H4" /></div>
+                <div class="form-group"><label>No RT</label><input type="text" id="RTIuranInput" placeholder="Contoh: 1, 5, 8" /></div>
                 <div id="RTIuranResult"></div>
             </div>
             <div class="modal-footer">
@@ -670,6 +670,7 @@
             }
             var html = '', gP = 0, gE = 0, gS = 0, gT = 0;
             sectionsToRender.forEach(function (sec, si) {
+                var sectionIndex = selectedJurnalSection >= 0 ? selectedJurnalSection : si;
                 gP += sec.totalPemasukan; gE += sec.totalPengeluaran; gS = sec.saldo; gT += sec.transactions.length;
                 if (data.sections.length > 1) {
                     html += '<div class="section-header"><h3>' + esc(sec.bulan || sec.header) + '</h3>' +
@@ -691,7 +692,7 @@
                         '<td class="hide-mobile">' + esc(t.keterangan) + renderImgLink(t.linkGambar) + '</td>' +
                         '<td class="text-center">' + ((t.isSaldoAwal || !isAuthenticated) ? '-' :
                             '<div class="action-buttons">' +
-                            '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + si + ',' + t.rowIndex + ')">E</button>' +
+                            '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + sectionIndex + ',' + t.rowIndex + ')">E</button>' +
                             '<button class="btn btn-success btn-sm" onclick="openBuktiModal(' + t.rowIndex + ')">B</button>' +
                             '<button class="btn btn-danger btn-sm" onclick="confirmDelete(' + t.rowIndex + ')">H</button>' +
                             '</div>') + '</td></tr>';
@@ -905,7 +906,7 @@
                 '</table>' +
                 '<div class="footer">' +
                 'Terima kasih atas pembayarannya<br>' +
-                'Jika ada kesalahan hubungi bendahara 0817030065656' +
+                'Jika ada kesalahan hubungi bendahara 081232688189' +
                 // '<p class="nobukti">' + esc(nobukti) + '</p>' +
                 '</div>' +
                 '</div>';
@@ -1108,17 +1109,22 @@
         // Tampilkan versi backend
         function showBackendVersion() {
             if (!API_URL) return;
-            
+
             apiGet('getVersion', {}).then(function(r) {
                 var info = document.getElementById('versionInfo');
                 if (r && r.version) {
                     info.innerHTML = `(v${r.version} - ${r.updateDate || 'Terbaru'})`;
                     info.style.color = '#a5f3fc';
                 } else {
-                    info.innerHTML = '(vUnknown)';
+                    info.innerHTML = '(vLocal)';
+                    info.style.color = '#a5f3fc';
                 }
             }).catch(function() {
-                document.getElementById('versionInfo').innerHTML = '(vLocal)';
+                var info = document.getElementById('versionInfo');
+                if (info) {
+                    info.innerHTML = '(vLocal)';
+                    info.style.color = '#a5f3fc';
+                }
             });
         }
     </script>
