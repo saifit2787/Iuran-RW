@@ -409,6 +409,7 @@
                 showBackendVersion();
             });
 
+
         function saveApiUrl() {
             var url = document.getElementById('apiUrlInput').value.trim();
             if (!url || !url.startsWith('https://script.google.com/')) { showToast('URL tidak valid', 'error'); return; }
